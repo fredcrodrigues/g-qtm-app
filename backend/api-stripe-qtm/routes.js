@@ -10,8 +10,6 @@ const {
     checkStatusPaymentIntent
 } = require("./controllers/stripePaymentIntent");
 
-const { testecloud } = require("./controllers/teste");
-
 const { validateCard } = require("./controllers/stripeCard");
 
 const { refund } = require("./controllers/stripeRefund");

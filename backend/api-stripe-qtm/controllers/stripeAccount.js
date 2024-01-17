@@ -23,8 +23,8 @@ module.exports = {
 
             const accountLink = await stripe.accountLinks.create({
                 account: account.id,
-                refresh_url: 'https://www.google.com', // URL para redirecionar se o usuário fechar a janela de onboarding
-                return_url: process.env.DEEP_LINK, // URL para redirecionar após o usuário concluir o onboarding
+                refresh_url: process.env.LINK_REGISTER, // URL para redirecionar se o usuário fechar a janela de onboarding
+                return_url: process.env.LINK_FINISHED, // URL para redirecionar após o usuário concluir o onboarding
                 type: 'account_onboarding',
             });
             
