@@ -1,5 +1,4 @@
-require('dotenv').config()
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+const stripeUseCases = require("../external/stripe")
 
 module.exports = {
     refund: async (req, res) => {
@@ -8,10 +7,11 @@ module.exports = {
         const refundValue = refundPercent * req.body.paymentDetails.amount;
 
         try {
-            const refund = await stripe.refunds.create({
+
+            const refund = await stripeUseCases.refundPayment({
                 charge: req.body.paymentDetails.latest_charge,
                 amount: refundValue
-            });
+            })
 
             if (refund.status === "succeeded") {
                 return res.status(200).json({

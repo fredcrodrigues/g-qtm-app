@@ -3,7 +3,6 @@ const router = express.Router();
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 //import controllers
 const { 
-    
     createPaymentIntentByCard, 
     confirmPaymentIntent,
     fundsTransfer,
@@ -14,9 +13,13 @@ const { validateCard } = require("./controllers/stripeCard");
 
 const { refund } = require("./controllers/stripeRefund");
 
-const { createAccountConnected } = require("./controllers/stripeAccount");
+const { createAccountConnected, deleteTest } = require("./controllers/stripeAccount");
 
 const { cancelPayment } = require("./controllers/stripeCancelPayment");
+
+const { createScheduleMeeting } = require("./controllers/scheduleMeetings")
+
+const { sendMailGeneralSupport } = require("./controllers/mailService")
 
 //middlewares
 const createCardToken = require("./middlewares/createCardToken");
@@ -31,11 +34,8 @@ const processTransfersOnRefund = require("./middlewares/processTransfersOnRefund
     //confirm the intent payment
     router.get("/confirm-payment-intent", confirmPaymentIntent);
 
-   
-
     //cancel payment intent
     router.get("/cancel-payment-intent", checkPaymentIntent, cancelPayment);
-    
 
     //refund
     router.post("/refund-payment", checkPaymentForRefund, processTransfersOnRefund, refund);
@@ -51,5 +51,13 @@ const processTransfersOnRefund = require("./middlewares/processTransfersOnRefund
 
     //check status payment intent
     router.get("/check-status-payment-intent", checkStatusPaymentIntent);
+
+    router.get("/delete/:paymentId", deleteTest);
+
+    //create schedule meeting
+    router.post("/create-schedule-meeting", createScheduleMeeting);
+
+    //send mail
+    router.post("/send-general-support-mail", sendMailGeneralSupport)
 
 module.exports = router;    

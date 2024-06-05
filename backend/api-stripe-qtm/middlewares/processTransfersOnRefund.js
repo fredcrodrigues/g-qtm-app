@@ -1,4 +1,4 @@
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+const stripeUseCases = require("../external/stripe")
 
 const processTransfersOnRefund = async (req, res, next) => {
 
@@ -11,7 +11,7 @@ const processTransfersOnRefund = async (req, res, next) => {
     
     try {
         // transferencia para o terapeuta
-        const transferSeller = stripe.transfers.create({
+        const transferSeller = await stripeUseCases.transferFunds({
             amount: sellerValue, // Value in cents
             currency: currency,
             destination: connectedAccountSellerId,
@@ -20,7 +20,7 @@ const processTransfersOnRefund = async (req, res, next) => {
         });
 
         // transferencia para a plataforma (QTM)
-        const transferPlatform = stripe.transfers.create({
+        const transferPlatform = await stripeUseCases.transferFunds({
             amount: platformValue, // Value in cents
             currency: currency,
             destination: process.env.PLATFORM_ACCOUNT,
@@ -28,7 +28,7 @@ const processTransfersOnRefund = async (req, res, next) => {
             source_transaction: latest_charge
         });
 
-        const [transferSellerResponse, transferPlatformResponse] = await Promise.all([transferSeller, transferPlatform]);
+        await Promise.all([transferSeller, transferPlatform]);
 
         next()
 

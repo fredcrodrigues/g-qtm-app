@@ -1,5 +1,4 @@
-const express = require('express');
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+const stripeUseCases = require("../external/stripe")
 
 const createCardToken = async (req, res, next) => {
 
@@ -7,9 +6,7 @@ const createCardToken = async (req, res, next) => {
 
     try {
 
-        const token = await stripe.tokens.create({
-            card: req.body.card
-        });
+        const token = await stripeUseCases.createCardToken(req.body.card)
 
         //add card token in header request
         req.tokenCard = token.id;

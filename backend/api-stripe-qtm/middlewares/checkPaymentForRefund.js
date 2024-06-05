@@ -1,11 +1,11 @@
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+const stripeUseCases = require("../external/stripe")
 
 const checkPaymentForRefund = async (req, res, next) => {
 
     const { paymentIntentId } = req.body;
 
     try {
-        const paymentIntent = await stripe.paymentIntents.retrieve(
+        const paymentIntent = await stripeUseCases.checkStatusPaymentIntent(
             paymentIntentId
         );
 

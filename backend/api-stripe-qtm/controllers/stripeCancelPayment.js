@@ -1,5 +1,4 @@
-require('dotenv').config()
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+const stripeUseCases = require("../external/stripe")
 
 module.exports = {
     cancelPayment: async (req, res) => {
@@ -7,9 +6,7 @@ module.exports = {
         const { paymentIntentId } = req.query;
         
         try {
-            const paymentIntent = await stripe.paymentIntents.cancel(
-                paymentIntentId
-            );
+            const paymentIntent = await stripeUseCases.cancelPayment(paymentIntentId)
 
             if(paymentIntent?.status=="canceled"){
                 return res.status(200).json({

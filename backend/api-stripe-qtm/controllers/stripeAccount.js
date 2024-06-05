@@ -1,4 +1,4 @@
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+const stripeUseCases = require("../external/stripe")
 
 module.exports = {
     createAccountConnected: async (req, res) => {
@@ -6,27 +6,9 @@ module.exports = {
         const { email, countryCode, name } = req.body;
 
         try {
-            const account = await stripe.accounts.create({
-                type: 'express', // ou 'standard' ou 'custom'
-                country: countryCode, // Código do país da conta
-                email: email, // E-mail do vendedor
-                capabilities: {
-                    card_payments: { requested: true },
-                    transfers: { requested: true },
-                },
-                business_type: "individual",
-                business_profile: {
-                    url: "https://qtmhealthtech.com.br/",
-                    name: name//nome do terapeuta
-                }
-            });
+            const account = await stripeUseCases.createAccountConnected(countryCode, email, name)
 
-            const accountLink = await stripe.accountLinks.create({
-                account: account.id,
-                refresh_url: process.env.LINK_REGISTER, // URL para redirecionar se o usuário fechar a janela de onboarding
-                return_url: process.env.LINK_FINISHED, // URL para redirecionar após o usuário concluir o onboarding
-                type: 'account_onboarding',
-            });
+            const accountLink = await stripeUseCases.createLinkForOnboarding(account.id)
             
             return res.status(200).json({
                 message: "account creation started",
@@ -41,5 +23,20 @@ module.exports = {
             });
         }
 
+    },
+    deleteTest: async (req, res) =>{
+        try {
+            const deleted = await stripe.accounts.del(req.params.paymentId);
+
+            res.status(200).json({
+                status: "success",
+                message: "account deleted"
+            })
+        } catch (error) {
+            res.status(500).json({
+                status: "error",
+                message: "internal error"
+            })            
+        }
     }
 }
