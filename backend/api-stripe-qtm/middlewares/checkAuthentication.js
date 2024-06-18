@@ -2,7 +2,7 @@ const admin = require("firebase-admin");
 
 //check if jwt token is valid
 const authenticate = async (req, res, next) => {
-    const idToken = req.headers.authToken;
+    const idToken = req.headers.authtoken;
     try {
       if(idToken){
         const decodedToken = await admin.auth().verifyIdToken(idToken);

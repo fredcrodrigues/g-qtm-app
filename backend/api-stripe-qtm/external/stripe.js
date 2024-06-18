@@ -39,6 +39,7 @@ class StripeUseCases{
             },
             description: "consulta marcada", // Adicione uma descrição conforme necessário
             receipt_email: email,
+            capture_method: "manual"
         });
 
         return paymentIntent

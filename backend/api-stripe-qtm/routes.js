@@ -40,6 +40,9 @@ const processTransfersOnRefund = require("./middlewares/processTransfersOnRefund
     //refund
     router.post("/refund-payment", checkPaymentForRefund, processTransfersOnRefund, refund);
 
+    //cancel payment by theraphist
+    router.get("/cancel-payment-by-theraphist", cancelPayment);
+
     //validate a card
     router.post("/validate-card", validateCard);
 
